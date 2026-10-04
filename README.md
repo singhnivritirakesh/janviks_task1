@@ -156,9 +156,9 @@ All demo accounts are pre-seeded with secure passwords:
 
 | Role | Email | Password | MFA Configuration |
 | :--- | :--- | :--- | :--- |
-| **Administrator** | `admin@playsphere.local` | `AdminSecurePass2026!` | **Mandatory TOTP** (Use CLI enrollment below) |
-| **Venue Manager** | `manager@playsphere.local` | `ManagerSecurePass2026!` | Optional |
-| **Player / Athlete** | `player@playsphere.local` | `PlayerSecurePass2026!` | Optional |
+| **Administrator** | `admin@playsphere.local` | Created via CLI | **Mandatory TOTP** (Use CLI enrollment below) |
+| **Venue Manager** | `manager@playsphere.local` | `PlayManager2026!Secure` | Optional |
+| **Player / Athlete** | `player@playsphere.local` | `PlayAthlete2026!Fast` | Optional |
 
 ### Interactive Admin Creation & MFA Enrollment CLI
 To create a new administrator with a live interactive QR code and secret:
