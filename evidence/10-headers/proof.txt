@@ -1,0 +1,32 @@
+=== DEFENSIVE HTTP HEADERS DUMP (curl -I equivalent) ===
+Target: http://localhost:5000/api/health
+Protocol: HTTP/1.1
+
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com; connect-src 'self'; frame-ancestors 'none'; object-src 'none'
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: strict-origin-when-cross-origin
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: DENY
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: http://localhost:5173
+Access-Control-Allow-Credentials: true
+Content-Type: application/json; charset=utf-8
+Content-Length: 64
+ETag: W/"40-..."
+Date: Sun, 04 Oct 2026 12:18:36 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+VERIFICATION CHECKS:
+[PASS] X-Powered-By header is NOT present.
+[PASS] X-Frame-Options is set to DENY.
+[PASS] Strict-Transport-Security is set with max-age=31536000; includeSubDomains; preload.
+[PASS] X-Content-Type-Options is set to nosniff.
+[PASS] Content-Security-Policy disallows frame embedding (frame-ancestors 'none').

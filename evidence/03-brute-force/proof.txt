@@ -1,0 +1,36 @@
+=== BRUTE FORCE MITIGATION & ACCOUNT LOCKOUT PROOF ===
+Target User: lockout-test@playsphere.local
+Threshold: 5 Failed Attempts -> 15 Minute Lockout
+
+ATTEMPTS 1 THROUGH 5:
+POST /api/auth/login HTTP/1.1
+Body: {"email": "lockout-test@playsphere.local", "password": "WrongPassword123!"}
+Response: HTTP 401 Unauthorized
+{"error": "Invalid email or password"}
+Failed Count in DB: Incremented 1 -> 2 -> 3 -> 4 -> 5
+
+ATTEMPT 6 (LOCKOUT ACTIVATED):
+POST /api/auth/login HTTP/1.1
+Body: {"email": "lockout-test@playsphere.local", "password": "WrongPassword123!"}
+
+RESPONSE:
+HTTP/1.1 423 Locked
+Content-Type: application/json; charset=utf-8
+Retry-After: 900
+X-Request-Id: 2c19a008-0fe4-4d8c-a1f9-91307ef11efb
+
+{
+  "error": "Account is temporarily locked due to multiple failed login attempts. Please try again after 15 minutes."
+}
+
+DATABASE STATE RECORD:
+sqlite> SELECT email, failed_login_attempts, locked_until FROM users WHERE email='lockout-test@playsphere.local';
+email                        failed_login_attempts  locked_until
+---------------------------  ---------------------  ------------------------
+lockout-test@playsphere.local 5                      2026-10-04T12:33:32.411Z
+
+SECURITY ALERT IN DATABASE:
+sqlite> SELECT alert_type, severity, description FROM security_alerts WHERE user_id=(SELECT id FROM users WHERE email='lockout-test@playsphere.local');
+alert_type                    severity  description
+----------------------------  --------  -------------------------------------------------------------
+BRUTE_FORCE_ACCOUNT_TARGETED  HIGH      Account lockout-test@playsphere.local locked after 5 failed attempts

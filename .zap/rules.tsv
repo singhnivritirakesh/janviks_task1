@@ -1,0 +1,5 @@
+# OWASP ZAP Baseline Scan Rules
+# Format: <rule-id> <IGNORE|WARN|FAIL> <regex-pattern>
+10015	IGNORE	.*	# Incomplete or No HTTP to HTTPS Redirect (Handled by Nginx proxy)
+10038	WARN	.*	# Content Security Policy (CSP) Header Not Set on sub-paths
+10020	WARN	.*	# Anti-CSRF Tokens Check (Using SameSite=Strict cookies + Bearer auth)

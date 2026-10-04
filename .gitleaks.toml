@@ -1,0 +1,47 @@
+# Gitleaks Configuration for PlaySphere Connect
+# Automated secret detection preventing credential leaks
+
+title = "PlaySphere Connect Gitleaks Config"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "rsa-private-key"
+description = "RSA Private Key Detection"
+regex = '''-----BEGIN RSA PRIVATE KEY-----'''
+tags = ["key", "rsa", "jwt", "crypto"]
+
+[[rules]]
+id = "generic-private-key"
+description = "Generic Private Key Detection"
+regex = '''-----BEGIN PRIVATE KEY-----'''
+tags = ["key", "crypto"]
+
+[[rules]]
+id = "supabase-secret-key"
+description = "Supabase Service Role Secret Key"
+regex = '''(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[a-zA-Z0-9_-]{50,}\.[a-zA-Z0-9_-]{40,})'''
+tags = ["supabase", "jwt", "token"]
+
+[[rules]]
+id = "database-connection-url-secret"
+description = "Database connection URL with embedded password"
+regex = '''postgres(?:ql)?://[a-zA-Z0-9_-]+:([^@\s]{6,})@[a-zA-Z0-9_.-]+:[0-9]{2,5}/[a-zA-Z0-9_.-]+'''
+tags = ["database", "password"]
+
+[[rules]]
+id = "hardcoded-cookie-secret"
+description = "Hardcoded Cookie Signing Secret"
+regex = '''COOKIE_SECRET\s*=\s*['"][a-zA-Z0-9_\-!@#$%^&*]{16,}['"]'''
+tags = ["cookie", "secret"]
+
+[allowlist]
+description = "Allowlist for documentation, tests, and mock configuration examples"
+paths = [
+  '''\.env\.example$''',
+  '''docs/.*''',
+  '''evidence/.*''',
+  '''server/tests/.*''',
+  '''package-lock\.json$'''
+]

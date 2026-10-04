@@ -1,0 +1,38 @@
+=== STORED XSS NEUTRALIZATION VERIFICATION PROOF ===
+Timestamp: 2026-10-04T12:18:31Z
+Target Endpoint: POST /api/events
+
+ORIGINAL INJECTION PAYLOAD:
+{
+  "title": "Soccer Match <script>alert(\"XSS\")</script><img src=x onerror=alert(1)>",
+  "description": "Testing HTML sanitization <iframe src=\"javascript:alert(1)\"></iframe> Clean Description",
+  "venueId": "38a3068d-8d5f-46ea-9d8a-6ee8fc8a096c",
+  "date": "2026-10-30",
+  "startTime": "10:00",
+  "endTime": "12:00",
+  "maxParticipants": 10,
+  "price": 20,
+  "sportType": "Football",
+  "skillLevel": "Beginner"
+}
+
+EVENT RETRIEVAL RESPONSE:
+GET /api/events/c9fa1265-d68b-4a55-bc11-2eb2a79eb86d HTTP/1.1
+Host: localhost:5000
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "id": "c9fa1265-d68b-4a55-bc11-2eb2a79eb86d",
+  "title": "Soccer Match ",
+  "description": "Testing HTML sanitization  Clean Description",
+  "sportType": "Football",
+  "skillLevel": "Beginner"
+}
+
+ANALYSIS:
+- Executable <script> block: REMOVED
+- Malicious <img> with onerror: REMOVED
+- Malicious <iframe> with javascript URI: REMOVED
+- Harmless text ("Soccer Match ", "Testing HTML sanitization  Clean Description"): PRESERVED

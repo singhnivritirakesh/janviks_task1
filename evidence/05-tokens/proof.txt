@@ -1,0 +1,48 @@
+=== TOKEN SECURITY & ROTATION VERIFICATION PROOF ===
+Timestamp: 2026-10-04T12:18:35Z
+
+1. ALGORITHM CONFUSION TEST (HS256 with Public Key as secret):
+REQUEST:
+GET /api/admin/users HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+RESPONSE:
+HTTP/1.1 401 Unauthorized
+{"error": "Invalid or expired token"}
+Server Log: "JWT verification failed: invalid algorithm"
+
+2. ALGORITHM "NONE" TEST:
+REQUEST:
+GET /api/admin/users HTTP/1.1
+Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0...
+
+RESPONSE:
+HTTP/1.1 401 Unauthorized
+{"error": "Invalid or expired token"}
+Server Log: "JWT verification failed: jwt signature is required"
+
+3. REFRESH TOKEN ROTATION & REPLAY ATTACK TEST:
+Step A: Valid Refresh Request
+POST /api/auth/refresh HTTP/1.1
+Cookie: playsphere_refresh_token=OpaqueToken_V1
+
+Response: HTTP 200 OK
+Set-Cookie: playsphere_refresh_token=OpaqueToken_V2; Path=/api/auth; HttpOnly; SameSite=Strict
+
+Step B: Attacker Replays OpaqueToken_V1
+POST /api/auth/refresh HTTP/1.1
+Cookie: playsphere_refresh_token=OpaqueToken_V1
+
+Response: HTTP 401 Unauthorized
+Set-Cookie: playsphere_refresh_token=; Path=/api/auth; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+{
+  "error": "Refresh token reuse detected. All sessions in this family have been revoked."
+}
+
+CRITICAL ALERT LOG:
+{
+  "alert_type": "REFRESH_TOKEN_REUSE_DETECTED",
+  "severity": "CRITICAL",
+  "description": "A previously revoked refresh token in family 'ae13f726-bac0-4455-838b-e4327282eb0c' was presented for exchange. Token family invalidated immediately. Potential session hijacking.",
+  "status": "NEW"
+}

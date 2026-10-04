@@ -22,15 +22,19 @@ dist-ssr
 certs/*.pem
 certs/*.key
 certs/*.crt
+docker/certs/*.key
+docker/certs/*.crt
 server/keys/*.pem
 server/keys/*.key
 *.key
 *.pem
+*.crt
 
 # Database files
 *.db
-*.sqlite
-*.sqlite3
+*.sqlite*
+data/
+
 
 # Editor directories and files
 .vscode/*

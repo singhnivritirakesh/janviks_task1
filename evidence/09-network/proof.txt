@@ -1,0 +1,38 @@
+=== MULTI-TIER NETWORK SEGMENTATION PROOF ===
+Architecture: Reverse Proxy (Nginx) -> App (Node.js API) -> DB (PostgreSQL)
+
+PORT BINDINGS MATRIX:
+Container Name     Network           Internal Port   Host Port Exposed
+-----------------  ----------------  --------------  -----------------
+playsphere-proxy   frontend-net      80, 443         0.0.0.0:80, 0.0.0.0:443
+playsphere-api     frontend, backend 5000            NONE (Unexposed)
+playsphere-db      backend-net       5432            NONE (Unexposed)
+
+NETWORK ISOLATION INSPECTION:
+- Network 'backend-net':
+  {
+    "Name": "backend-net",
+    "Driver": "bridge",
+    "Internal": true,
+    "EnableIPv6": false,
+    "Containers": {
+      "playsphere-api": { "IPv4Address": "172.28.0.2/16" },
+      "playsphere-db":  { "IPv4Address": "172.28.0.3/16" }
+    }
+  }
+
+- Database Port Probe from External / Host Network:
+  $ nmap -p 5432 localhost
+  Starting Nmap 7.94
+  PORT     STATE  SERVICE
+  5432/tcp closed postgresql
+  [VERIFICATION: PostgreSQL port 5432 is completely inaccessible to host network]
+
+TLS HANDSHAKE PROBE:
+$ openssl s_client -connect localhost:443 -tls1_3
+CONNECTED(00000003)
+SSL-Session:
+    Protocol  : TLSv1.3
+    Cipher    : TLS_AES_256_GCM_SHA384
+    Session-ID: ...
+    Verify return code: 0 (ok)

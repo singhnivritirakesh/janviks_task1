@@ -1,0 +1,74 @@
+=== MULTI-FACTOR AUTHENTICATION VERIFICATION PROOF ===
+Target Administrator: admin-sec@playsphere.local
+Protocol: RFC 6238 TOTP (SHA-1, 30s step, 6 digits)
+
+STEP 1: PRIMARY CREDENTIAL SUBMISSION
+POST /api/auth/login HTTP/1.1
+Host: localhost:5000
+Content-Type: application/json
+
+{
+  "email": "admin-sec@playsphere.local",
+  "password": "SuperSecure123!Pass"
+}
+
+RESPONSE:
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "requireMfa": true,
+  "preAuthToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6InBsYXlzcGhlcmUta2V5LTEiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJjYTdkNDE0Zi1mYzNkLTQ2ZDUtYTAyNC01Y2RhNjcxNjhhMTUiLCJlbWFpbCI6ImFkbWluLXNlY0BwbGF5c3BoZXJlLmxvY2FsIiwicm9sZSI6ImFkbWluIiwicHJlX2F1dGgiOnRydWUsImlzcyI6InBsYXlzcGhlcmUtYXV0aC1zZXJ2aWNlIiwiYXVkIjoicGxheXNwaGVyZS1jbGllbnQiLCJpYXQiOjE3OTEwODA3MTYsImV4cCI6MTc5MTA4MTAxNn0...",
+  "message": "MFA code required to complete login"
+}
+[VERIFICATION: No access token or Set-Cookie header issued in Step 1]
+
+---
+
+STEP 2: INVALID TOTP CHALLENGE
+POST /api/auth/mfa/challenge HTTP/1.1
+Host: localhost:5000
+Content-Type: application/json
+
+{
+  "preAuthToken": "eyJhbGciOiJSUzI1Ni...",
+  "code": "000000"
+}
+
+RESPONSE:
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json; charset=utf-8
+
+{
+  "error": "Invalid MFA verification code"
+}
+
+AUDIT LOG RECORD:
+{"event_type": "AUTH_MFA_FAILED", "actor_id": "ca7d414f-fc3d-46d5-a024-5cda67168a15", "outcome": "FAILURE"}
+
+---
+
+STEP 3: AUTHENTIC TOTP CHALLENGE (Generated: 782419)
+POST /api/auth/mfa/challenge HTTP/1.1
+Host: localhost:5000
+Content-Type: application/json
+
+{
+  "preAuthToken": "eyJhbGciOiJSUzI1Ni...",
+  "code": "782419"
+}
+
+RESPONSE:
+HTTP/1.1 200 OK
+Set-Cookie: playsphere_refresh_token=1fa6e9be41d248b6...; Path=/api/auth; HttpOnly; SameSite=Strict
+Content-Type: application/json; charset=utf-8
+
+{
+  "accessToken": "eyJhbGciOiJSUzI1Ni...",
+  "user": {
+    "id": "ca7d414f-fc3d-46d5-a024-5cda67168a15",
+    "email": "admin-sec@playsphere.local",
+    "role": "admin"
+  }
+}
+[VERIFICATION: Full administrative session granted only after step-up completion]

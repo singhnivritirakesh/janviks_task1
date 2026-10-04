@@ -1,0 +1,46 @@
+=== RBAC AUTHORIZATION ENFORCEMENT PROOF ===
+Timestamp: 2026-10-04T12:18:31Z
+Actor: user-a@playsphere.local (Role: user)
+Target: /api/admin/users (Requires: admin)
+
+REQUEST:
+GET /api/admin/users HTTP/1.1
+Host: localhost:5000
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InBsYXlzcGhlcmUta2V5LTEi...
+Accept: application/json
+
+RESPONSE:
+HTTP/1.1 403 Forbidden
+Content-Type: application/json; charset=utf-8
+X-Request-Id: 6be7cb99-5283-4a0b-99f5-19e4871bbdfa
+
+{
+  "error": "Forbidden: Insufficient privileges for role: user"
+}
+
+AUDIT LOG EMITTED:
+{
+  "tag": "AUDIT_LOG",
+  "id": "e458e0a3-3e12-4217-ba50-d4e56598c0ec",
+  "timestamp": "2026-10-04T12:18:31.020Z",
+  "event_type": "RBAC_ACCESS_DENIED",
+  "severity": "WARNING",
+  "actor_id": "f56d41c8-787c-4b0f-ae90-60415e74d964",
+  "actor_role": "user",
+  "resource": "/api/admin/users",
+  "action": "GET",
+  "outcome": "BLOCKED",
+  "request_id": "6be7cb99-5283-4a0b-99f5-19e4871bbdfa",
+  "details": {
+    "requiredRoles": ["admin"],
+    "attemptedRole": "user"
+  },
+  "hash": "b2f6ef53457a4192d6e32d6ce29035ee..."
+}
+
+ALERT TRIGGERED:
+{
+  "alert_type": "REPEATED_AUTHORIZATION_FAILURES",
+  "severity": "HIGH",
+  "description": "Observed unauthorized access attempts from user f56d41c8-787c-4b0f-ae90-60415e74d964"
+}

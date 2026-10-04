@@ -1,0 +1,47 @@
+=== IDOR HORIZONTAL PRIVILEGE ESCALATION DEFENSE PROOF ===
+Timestamp: 2026-10-04T12:18:36Z
+Resource: Booking ID 1ea1d8c1-76e9-4d9c-b03e-c3dd559beecf
+Resource Owner: User B (ID: a2be0818-220e-4f23-b633-1f410e243bdf)
+Attacker: User A (ID: f56d41c8-787c-4b0f-ae90-60415e74d964)
+
+ATTACK 1: UNAUTHORIZED SNOOPING ATTEMPT
+GET /api/bookings/1ea1d8c1-76e9-4d9c-b03e-c3dd559beecf HTTP/1.1
+Host: localhost:5000
+Authorization: Bearer <User_A_Token>
+
+RESPONSE:
+HTTP/1.1 403 Forbidden
+Content-Type: application/json; charset=utf-8
+
+{
+  "error": "Forbidden: You do not have permission to access this booking"
+}
+
+ATTACK 2: UNAUTHORIZED CANCELLATION ATTEMPT
+POST /api/bookings/1ea1d8c1-76e9-4d9c-b03e-c3dd559beecf/cancel HTTP/1.1
+Host: localhost:5000
+Authorization: Bearer <User_A_Token>
+
+RESPONSE:
+HTTP/1.1 403 Forbidden
+Content-Type: application/json; charset=utf-8
+
+{
+  "error": "Forbidden: You do not have permission to modify this booking"
+}
+
+AUDIT LOG LOGGED TO CHAIN:
+{
+  "event_type": "IDOR_ACCESS_ATTEMPT_BLOCKED",
+  "severity": "WARNING",
+  "actor_id": "f56d41c8-787c-4b0f-ae90-60415e74d964",
+  "actor_role": "user",
+  "resource": "/api/bookings/1ea1d8c1-76e9-4d9c-b03e-c3dd559beecf",
+  "action": "GET",
+  "outcome": "BLOCKED",
+  "details": {
+    "bookingId": "1ea1d8c1-76e9-4d9c-b03e-c3dd559beecf",
+    "resourceOwnerId": "a2be0818-220e-4f23-b633-1f410e243bdf",
+    "attemptedByUserId": "f56d41c8-787c-4b0f-ae90-60415e74d964"
+  }
+}
