@@ -1,0 +1,169 @@
+﻿=== XSS Prevention Evidence ===
+Timestamp: 2026-10-05 16:25:37
+
+--- Test: XSS payload in venue search ---
+Response (safe - no script execution): {
+    "venues":  [
+                   {
+                       "id":  "7674f261-c70b-4940-bd93-9950f3328443",
+                       "name":  "Test Security Arena",
+                       "description":  "Hardened sports facility for penetration testing",
+                       "address":  "100 Cyber Way",
+                       "city":  "TechCity",
+                       "sport_types":  "Football",
+                       "amenities":  "Locker",
+                       "hourly_rate":  50,
+                       "image_url":  "https://example.com/img.jpg",
+                       "rating":  5,
+                       "created_by":  "25b8b532-b03b-4c93-adb5-554181b7dec4",
+                       "created_at":  "2026-10-05T10:50:09.201Z"
+                   },
+                   {
+                       "id":  "c5beccc8-0959-49b9-9918-45874cf43c84",
+                       "name":  "Test Security Arena",
+                       "description":  "Hardened sports facility for penetration testing",
+                       "address":  "100 Cyber Way",
+                       "city":  "TechCity",
+                       "sport_types":  "Football",
+                       "amenities":  "Locker",
+                       "hourly_rate":  50,
+                       "image_url":  "https://example.com/img.jpg",
+                       "rating":  5,
+                       "created_by":  "81d6ee17-00a9-468d-a2f3-ac2f9d11ff99",
+                       "created_at":  "2026-10-05T10:49:32.363Z"
+                   },
+                   {
+                       "id":  "b8bfdb69-8ebf-4497-8d2a-ae2a1e42ac95",
+                       "name":  "Test Security Arena",
+                       "description":  "Hardened sports facility for penetration testing",
+                       "address":  "100 Cyber Way",
+                       "city":  "TechCity",
+                       "sport_types":  "Football",
+                       "amenities":  "Locker",
+                       "hourly_rate":  50,
+                       "image_url":  "https://example.com/img.jpg",
+                       "rating":  5,
+                       "created_by":  "93f4b743-58b7-40c2-b1e1-9a9d3e97ee9c",
+                       "created_at":  "2026-10-04T15:34:16.691Z"
+                   },
+                   {
+                       "id":  "8bdfe02b-385f-4d06-9f7d-97ab51c134d6",
+                       "name":  "Test Security Arena",
+                       "description":  "Hardened sports facility for penetration testing",
+                       "address":  "100 Cyber Way",
+                       "city":  "TechCity",
+                       "sport_types":  "Football",
+                       "amenities":  "Locker",
+                       "hourly_rate":  50,
+                       "image_url":  "https://example.com/img.jpg",
+                       "rating":  5,
+                       "created_by":  "4a9e36e2-89d8-4ebe-8743-9b0570cc70f7",
+                       "created_at":  "2026-10-04T12:48:52.567Z"
+                   },
+                   {
+                       "id":  "a0cbaf66-6809-4413-bd25-2bb9d8393651",
+                       "name":  "Test Security Arena",
+                       "description":  "Hardened sports facility for penetration testing",
+                       "address":  "100 Cyber Way",
+                       "city":  "TechCity",
+                       "sport_types":  "Football",
+                       "amenities":  "Locker",
+                       "hourly_rate":  50,
+                       "image_url":  "https://example.com/img.jpg",
+                       "rating":  5,
+                       "created_by":  "ca7d414f-fc3d-46d5-a024-5cda67168a15",
+                       "created_at":  "2026-10-04T12:18:32.873Z"
+                   },
+                   {
+                       "id":  "f51d5bae-d408-451d-a7f1-ecf7f6b2ec0d",
+                       "name":  "Test Security Arena",
+                       "description":  "Hardened sports facility for penetration testing",
+                       "address":  "100 Cyber Way",
+                       "city":  "TechCity",
+                       "sport_types":  "Football",
+                       "amenities":  "Locker",
+                       "hourly_rate":  50,
+                       "image_url":  "https://example.com/img.jpg",
+                       "rating":  5,
+                       "created_by":  "d9eab2b8-e25a-44a5-9915-c6d76f161995",
+                       "created_at":  "2026-10-04T12:18:02.073Z"
+                   },
+                   {
+                       "id":  "12f01036-35d9-4c45-9413-951800d87e89",
+                       "name":  "Test Security Arena",
+                       "description":  "Hardened sports facility for penetration testing",
+                       "address":  "100 Cyber Way",
+                       "city":  "TechCity",
+                       "sport_types":  "Football",
+                       "amenities":  "Locker",
+                       "hourly_rate":  50,
+                       "image_url":  "https://example.com/img.jpg",
+                       "rating":  5,
+                       "created_by":  "e12abc7d-2788-4a46-aa31-417f3f7aef3d",
+                       "created_at":  "2026-10-04T12:17:06.433Z"
+                   },
+                   {
+                       "id":  "59e29c2e-7e5b-4b57-9fff-0bbf3883286f",
+                       "name":  "Apex Sports Arena",
+                       "description":  "State-of-the-art indoor sports complex featuring FIFA-grade artificial turf, maple wood basketball courts, and LED stadium lighting.",
+                       "address":  "450 West 33rd Street",
+                       "city":  "New York",
+                       "sport_types":  "Football Basketball Volleyball",
+                       "amenities":  "Locker Rooms Showers Pro Shop Cafe Free Parking Equipment Rental",
+                       "hourly_rate":  85,
+                       "image_url":  "https://images.unsplash.com/photo-1518611012118-696072aa579a",
+                       "rating":  4.9,
+                       "created_by":  "6786fae6-15b6-4c70-ad53-23ef3e0271a9",
+                       "created_at":  "2026-10-04T12:14:25.791Z"
+                   },
+                   {
+                       "id":  "df8f7823-ab14-4e7d-b91c-d2f897ca7267",
+                       "name":  "Grand Slam Tennis Club",
+                       "description":  "Premier tennis facility with 8 championship clay and hard courts, professional coaching, and court illumination for evening play.",
+                       "address":  "120 Riverside Drive",
+                       "city":  "New York",
+                       "sport_types":  "Tennis Pickleball",
+                       "amenities":  "Pro Coaching Ball Machine Locker Rooms Racket Stringing Clubhouse",
+                       "hourly_rate":  65,
+                       "image_url":  "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0",
+                       "rating":  4.8,
+                       "created_by":  "6786fae6-15b6-4c70-ad53-23ef3e0271a9",
+                       "created_at":  "2026-10-04T12:14:25.791Z"
+                   },
+                   {
+                       "id":  "e78455eb-88b7-4e8d-9ba0-c2a56cf64038",
+                       "name":  "Skyline Badminton \u0026 Squash Center",
+                       "description":  "Air-conditioned multi-court sports hall equipped with Olympic-standard non-slip flooring and high-ceiling illumination.",
+                       "address":  "88 4th Avenue",
+                       "city":  "Brooklyn",
+                       "sport_types":  "Badminton Squash Table Tennis",
+                       "amenities":  "Equipment Rental Showers Spectator Lounge Vending Machines",
+                       "hourly_rate":  45,
+                       "image_url":  "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea",
+                       "rating":  4.7,
+                       "created_by":  "6786fae6-15b6-4c70-ad53-23ef3e0271a9",
+                       "created_at":  "2026-10-04T12:14:25.791Z"
+                   },
+                   {
+                       "id":  "111995f9-49aa-4f10-bb78-e50e7f6bf96d",
+                       "name":  "Hudson River Aquatic \u0026 Fitness Hub",
+                       "description":  "Olympic-size 50m heated pool, modern strength equipment, and multi-purpose activity studios overlooking the Hudson River.",
+                       "address":  "600 12th Avenue",
+                       "city":  "New York",
+                       "sport_types":  "Swimming Fitness Water Polo",
+                       "amenities":  "Olympic Pool Sauna Steam Room Certified Lifeguards Towel Service",
+                       "hourly_rate":  40,
+                       "image_url":  "https://images.unsplash.com/photo-1576610616656-d3aa5d1f4534",
+                       "rating":  4.9,
+                       "created_by":  "6786fae6-15b6-4c70-ad53-23ef3e0271a9",
+                       "created_at":  "2026-10-04T12:14:25.791Z"
+                   }
+               ],
+    "page":  1,
+    "limit":  20,
+    "count":  11
+}
+
+--- Test: XSS payload in login email field ---
+BLOCKED: {"error":"Invalid email or password format","requestId":"8c15188a-d7ae-43b9-aa4d-fc600107161d"}
+

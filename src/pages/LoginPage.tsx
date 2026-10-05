@@ -95,12 +95,23 @@ export default function LoginPage() {
       setRegPassword("");
       setRegFullName("");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Registration failed";
+      let msg = "Registration failed";
+      if (err instanceof Error) {
+        msg = err.message;
+        const customErr = err as { details?: unknown };
+        if (Array.isArray(customErr.details) && customErr.details.length > 0) {
+          msg = `${err.message}: ${customErr.details.join('. ')}`;
+        }
+      }
       setRegError(msg);
     } finally {
       setRegLoading(false);
     }
   };
+
+  const isMinLength = regPassword.length >= 8;
+  const hasLetter = /[a-zA-Z]/.test(regPassword);
+  const hasNumber = /[0-9]/.test(regPassword);
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
@@ -224,19 +235,37 @@ export default function LoginPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="reg-password">Password (NIST Policy: Min 12 Characters)</Label>
+                  <Label htmlFor="reg-password">Password (NIST Policy: Min 8 Characters)</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="reg-password"
                       type="password"
-                      placeholder="StrongPassword123!"
+                      placeholder="StrongPass2026!"
                       value={regPassword}
                       onChange={(e) => setRegPassword(e.target.value)}
                       className="pl-10"
                       required
                     />
                   </div>
+
+                  {/* NIST Password Checklist */}
+                  {regPassword.length > 0 && (
+                    <div className="rounded-md bg-muted/40 p-2 text-xs space-y-1 mt-1 border border-border/40">
+                      <div className={`flex items-center gap-1.5 ${isMinLength ? 'text-emerald-400 font-medium' : 'text-muted-foreground'}`}>
+                        <span className={`inline-block w-1.5 h-1.5 rounded-full ${isMinLength ? 'bg-emerald-400' : 'bg-muted-foreground'}`} />
+                        At least 8 characters ({regPassword.length}/8)
+                      </div>
+                      <div className={`flex items-center gap-1.5 ${hasLetter ? 'text-emerald-400 font-medium' : 'text-muted-foreground'}`}>
+                        <span className={`inline-block w-1.5 h-1.5 rounded-full ${hasLetter ? 'bg-emerald-400' : 'bg-muted-foreground'}`} />
+                        At least one letter (a-z, A-Z)
+                      </div>
+                      <div className={`flex items-center gap-1.5 ${hasNumber ? 'text-emerald-400 font-medium' : 'text-muted-foreground'}`}>
+                        <span className={`inline-block w-1.5 h-1.5 rounded-full ${hasNumber ? 'bg-emerald-400' : 'bg-muted-foreground'}`} />
+                        At least one number (0-9)
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-2">

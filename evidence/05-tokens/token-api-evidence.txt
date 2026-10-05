@@ -1,0 +1,12 @@
+﻿=== Token Security Evidence ===
+Timestamp: 2026-10-05 16:27:40
+
+--- Test 1: Access with no token ---
+BLOCKED: {"error":"Authentication required. Missing Bearer token.","requestId":"f0124f1c-af18-4b29-9d03-d7c277f5d450"}
+
+--- Test 2: Access with forged/invalid token ---
+BLOCKED: {"error":"Invalid or expired token","requestId":"bd7068b9-016a-438d-8cc8-7d9d2170c3de"}
+
+--- Test 3: Access with expired token ---
+BLOCKED: {"error":"Invalid or expired token","requestId":"19525019-a308-4937-926e-8df77f7f0e58"}
+

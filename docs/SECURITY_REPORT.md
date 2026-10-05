@@ -304,3 +304,119 @@ The PlaySphere Connect platform has transitioned from a vulnerable prototype to 
 
 ### Known Limitations
 - **Local Demonstration Host Environment:** The demonstration workstation runs Windows without the Docker CLI installed. All container configurations (`Dockerfile.api`, `Dockerfile.frontend`, `docker-compose.yml`, `docker/nginx/nginx.conf`) have been fully specified, validated, and syntactically verified. The application runs natively in demonstration mode using Node.js v20+ with an integrated SQLite database client adhering to identical parameterized constraints.
+- **Single-Instance Deployment:** The current architecture runs as a single API server node. A production deployment would require horizontal scaling with a load balancer and shared session/token storage (e.g., Redis).
+- **Self-Signed TLS Certificates:** The Nginx reverse proxy uses self-signed certificates for demonstration purposes. Production deployments must use certificates issued by a trusted Certificate Authority (e.g., Let's Encrypt, DigiCert).
+
+---
+
+## 11. Production Security Considerations
+
+This section addresses how the PlaySphere Connect solution would need to be adapted before being deployed in a real production environment handling sensitive or critical operational data.
+
+### 11.1 Network Segmentation & DMZ Placement
+
+In a production deployment, the architecture must implement proper network segmentation using a Demilitarized Zone (DMZ) pattern:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  Internet / Public Network                                         │
+│  └─→ AWS WAF / Cloudflare WAF (L7 DDoS + OWASP ruleset)           │
+└────────────────────────┬────────────────────────────────────────────┘
+                         │
+┌────────────────────────▼────────────────────────────────────────────┐
+│  DMZ / Public Subnet (e.g., AWS VPC 10.0.1.0/24)                   │
+│  ├─ Nginx Reverse Proxy (TLS termination, rate limiting)           │
+│  └─ Static CDN assets (S3 + CloudFront)                            │
+│  Allowed: Inbound 443/TCP from Internet; Outbound to App Subnet   │
+└────────────────────────┬────────────────────────────────────────────┘
+                         │ Internal ALB (port 5000)
+┌────────────────────────▼────────────────────────────────────────────┐
+│  Application Subnet / Private Zone (e.g., 10.0.2.0/24)            │
+│  ├─ PlaySphere API Nodes (Auto Scaling Group, min 2 instances)     │
+│  └─ Redis Cluster (session + rate-limit state)                     │
+│  Allowed: Inbound 5000/TCP from DMZ only; Outbound to DB Subnet   │
+└────────────────────────┬────────────────────────────────────────────┘
+                         │ PostgreSQL (port 5432)
+┌────────────────────────▼────────────────────────────────────────────┐
+│  Data Subnet / Restricted Zone (e.g., 10.0.3.0/24)                │
+│  ├─ PostgreSQL 16 (RDS Multi-AZ, encrypted at rest with KMS)      │
+│  └─ Audit Log Archive (S3 WORM / Glacier with Object Lock)        │
+│  Allowed: Inbound 5432/TCP from App Subnet ONLY; NO internet      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Key adaptations:**
+- Deploy behind a **Web Application Firewall (WAF)** such as AWS WAF or Cloudflare, configured with OWASP Core Rule Set (CRS) to filter L7 attacks before reaching the reverse proxy.
+- Use **VPC Security Groups and NACLs** to enforce strict subnet-level ingress/egress rules, ensuring the database tier has zero internet-routable access.
+- Separate **management/admin traffic** onto a dedicated bastion/VPN subnet, preventing administrative operations from traversing the public-facing network path.
+
+### 11.2 Restricted Administrative Access
+
+Production administrative access requires multiple layers of restriction:
+
+- **VPN-Only Admin Access:** Administrative endpoints (`/api/admin/*`) should be accessible only through a site-to-site VPN or client VPN (e.g., AWS Client VPN, WireGuard). Nginx location blocks should restrict admin paths to VPN-sourced IP ranges.
+- **Jump Box / Bastion Host:** SSH and direct database access must be routed through a hardened bastion host in a management subnet. Direct SSH to application servers must be disabled.
+- **SSH Key-Only Authentication:** Password-based SSH must be disabled across all servers. Only Ed25519/RSA-4096 key-based authentication should be permitted with mandatory `AllowUsers` restrictions in `sshd_config`.
+- **Infrastructure MFA:** All cloud console access, CI/CD deployment pipelines, and SSH sessions must require multi-factor authentication (e.g., AWS IAM MFA, YubiKey U2F/FIDO2 hardware tokens).
+- **Principle of Least Privilege:** IAM policies and RBAC should be scoped to individual team members with time-bound access (e.g., AWS STS AssumeRole with session duration limits).
+
+### 11.3 Centralized & Tamper-Evident Logging and Retention
+
+The current application writes audit logs to the local SQLite/PostgreSQL database. For production:
+
+- **External SIEM Integration:** Ship structured JSON audit logs via `stdout` to a centralized Security Information and Event Management (SIEM) platform such as **Splunk**, **Elastic SIEM (ELK Stack)**, **Datadog Security Monitoring**, or **AWS CloudWatch Logs + Security Hub**.
+- **Write-Once-Read-Many (WORM) Storage:** Archive audit logs to immutable storage such as **AWS S3 with Object Lock** (Compliance Mode) or **Azure Immutable Blob Storage**, ensuring logs cannot be modified or deleted even by administrators.
+- **Log Retention Policy:** Implement a minimum **90-day active retention** period with **1-year archival retention** to comply with regulatory requirements (GDPR Article 30, SOC 2 CC7.2, PCI DSS 10.7).
+- **Real-Time Alerting Pipeline:** Connect the `security_alerts` table events to operational notification channels (Slack, PagerDuty, OpsGenie) for immediate SOC analyst triage.
+- **Log Integrity Verification:** The existing SHA-256 hash chain mechanism provides tamper evidence. In production, pair this with periodic automated integrity verification jobs that run on a separate auditing server, comparing hash chains against a sealed baseline.
+
+### 11.4 Secure Key & Secret Management
+
+The current implementation uses environment variables and filesystem-stored RSA keys. Production adaptations:
+
+- **Dedicated Secrets Manager:** Migrate all secrets (database credentials, JWT private keys, cookie signing keys, TOTP encryption keys) to a dedicated secrets management service such as **HashiCorp Vault**, **AWS Secrets Manager**, or **Azure Key Vault**.
+- **Automatic Key Rotation:** Configure automated rotation policies:
+  - **RSA JWT Key Pairs:** Rotate every 90 days using the JWKS endpoint for zero-downtime key rollover (publish new public key → begin signing with new private key → deprecate old key after access token TTL expires).
+  - **Database Credentials:** Rotate every 30 days using Vault's database secrets engine or AWS RDS credential rotation.
+  - **Cookie Signing Keys:** Rotate quarterly with dual-key acceptance during transition windows.
+- **Runtime Secret Injection:** Secrets should be injected at container startup via environment variables sourced from the secrets manager (never baked into container images or committed to version control).
+- **Hardware Security Modules (HSMs):** For high-assurance deployments, store RSA private keys in FIPS 140-2 Level 3 certified HSMs (e.g., AWS CloudHSM, Azure Dedicated HSM) to prevent key extraction.
+
+### 11.5 Backup & Recovery
+
+- **Automated Database Backups:** Configure PostgreSQL **continuous archiving** using WAL (Write-Ahead Logging) with:
+  - **Point-in-Time Recovery (PITR):** Retain WAL segments for a minimum of 7 days, enabling recovery to any second within the retention window.
+  - **Daily Full Snapshots:** Automated daily `pg_basebackup` snapshots stored in encrypted S3 buckets (AES-256 server-side encryption with KMS-managed keys).
+  - **Cross-Region Replication:** Replicate backup snapshots to a secondary AWS region for disaster recovery.
+- **Recovery Objectives:**
+  - **Recovery Time Objective (RTO):** Target < 1 hour for full service restoration from the most recent backup.
+  - **Recovery Point Objective (RPO):** Target < 5 minutes of data loss using continuous WAL archiving.
+- **Regular Restore Testing:** Conduct monthly backup restoration drills to a staging environment, verifying data integrity, application functionality, and audit log chain continuity. Document results in an operational runbook.
+- **Encrypted Backup Storage:** All backup artifacts must be encrypted at rest and in transit. Access to backup storage must be restricted to the DBA team with MFA-protected IAM roles.
+
+### 11.6 Security Assessment & Audit Before Production Deployment
+
+Before any production deployment handling real user data or critical operational data, the following security assessment activities must be completed:
+
+1. **External Penetration Testing:** Engage a qualified third-party security firm to conduct a comprehensive black-box and grey-box penetration test covering:
+   - OWASP Top 10 vulnerability assessment
+   - API endpoint fuzzing and business logic testing
+   - Authentication and session management attack surface review
+   - Network-level vulnerability scanning (Nessus/Qualys)
+
+2. **OWASP ASVS Level 2+ Verification:** Complete a formal verification against the OWASP Application Security Verification Standard (ASVS) Level 2 checklist, documenting evidence for each control requirement.
+
+3. **SOC 2 Type II Readiness Assessment:** If handling enterprise customer data, prepare for SOC 2 Type II audit by documenting all security policies, procedures, and control evidence across the Trust Services Criteria (Security, Availability, Processing Integrity, Confidentiality, Privacy).
+
+4. **Vulnerability Remediation Cycle:** Establish a formal vulnerability management lifecycle:
+   - **Critical/High findings:** Remediate within 48 hours; re-test and verify remediation before deployment.
+   - **Medium findings:** Remediate within 2 weeks with documented risk acceptance if deferred.
+   - **Low/Informational findings:** Track in backlog; address in next scheduled maintenance window.
+
+5. **Dependency & Supply Chain Audit:** Conduct a thorough review of all third-party dependencies using `npm audit`, Snyk, or Socket.dev to identify known vulnerabilities, license compliance issues, and potential supply chain risks (typosquatting, maintainer compromise).
+
+6. **Incident Response Plan:** Document and test an incident response plan covering:
+   - Roles and responsibilities (Security team, Engineering, Legal, Communications)
+   - Communication protocols and escalation paths
+   - Evidence preservation and forensic investigation procedures
+   - Post-incident review and lessons-learned documentation

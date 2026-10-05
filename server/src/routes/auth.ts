@@ -69,7 +69,7 @@ authRouter.post('/register', authLimiter, async (req: Request, res: Response): P
   const passwordCheck = validatePasswordStrength(password);
   if (!passwordCheck.valid) {
     res.status(400).json({
-      error: 'Password does not meet security requirements',
+      error: `Password does not meet security requirements: ${passwordCheck.errors.join('. ')}`,
       details: passwordCheck.errors,
       requestId,
     });

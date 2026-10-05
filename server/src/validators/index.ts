@@ -17,7 +17,7 @@ export const sanitizedString = (min = 1, max = 500) =>
 // Authentication Schemas
 export const registerSchema = z.object({
   email: z.string().email().max(100).toLowerCase().trim(),
-  password: z.string().min(12).max(128),
+  password: z.string().min(8).max(128),
   fullName: z.string().min(2).max(100).transform(sanitizeString),
   role: z.enum(['user', 'venue_manager']).default('user'),
 }).strict();

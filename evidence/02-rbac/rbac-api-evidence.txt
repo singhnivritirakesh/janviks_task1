@@ -1,0 +1,9 @@
+﻿=== RBAC Access Control Evidence ===
+Timestamp: 2026-10-05 16:24:10
+
+--- Test 1: Unauthenticated access to admin endpoint ---
+BLOCKED: The remote server returned an error: (401) Unauthorized.
+
+--- Test 2: Unauthenticated access to bookings ---
+BLOCKED: The remote server returned an error: (401) Unauthorized.
+

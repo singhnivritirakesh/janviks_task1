@@ -1,0 +1,11 @@
+﻿=== Brute-Force Lockout Evidence ===
+Timestamp: 2026-10-05 16:25:20
+Test: 6 consecutive failed login attempts with wrong password
+
+Attempt 1 : HTTP 401 - {"error":"Invalid email or password.","requestId":"4771b308-0d93-47ec-bba1-725b950b28ae"}
+Attempt 2 : HTTP 401 - {"error":"Invalid email or password.","requestId":"f15f1868-61b6-4e9d-8200-43af7f8a24cb"}
+Attempt 3 : HTTP 401 - {"error":"Invalid email or password.","requestId":"bd64c428-b3f1-4e44-9d56-6831b642e2f1"}
+Attempt 4 : HTTP 401 - {"error":"Invalid email or password.","requestId":"f91d98c0-8186-4b32-a997-4e1a841a5b8d"}
+Attempt 5 : HTTP 401 - {"error":"Invalid email or password.","requestId":"391f2b47-b0ca-41cf-a32f-beb3cd11fd0d"}
+Attempt 6 : HTTP 423 - {"error":"Account is temporarily locked due to repeated failed logins. Please try again in 15 minutes.","requestId":"ad250357-7b8d-433e-b293-33f01313e4e5"}
+

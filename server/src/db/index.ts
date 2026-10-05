@@ -23,6 +23,16 @@ function createSqliteClient(dbPath: string): DbClient {
   db.pragma('journal_mode = WAL');
   db.pragma('foreign_keys = ON');
 
+  const stmtCache = new Map<string, any>();
+  function getStmt(sql: string) {
+    let stmt = stmtCache.get(sql);
+    if (!stmt) {
+      stmt = db.prepare(sql);
+      stmtCache.set(sql, stmt);
+    }
+    return stmt;
+  }
+
   function prepareSqlite(sql: string, params: unknown[]): { sqliteSql: string; sqliteParams: unknown[] } {
     const sqliteParams: unknown[] = [];
     const sqliteSql = sql.replace(/\$(\d+)/g, (_, idxStr) => {
@@ -36,7 +46,7 @@ function createSqliteClient(dbPath: string): DbClient {
   const client: DbClient = {
     async query<T = unknown>(sql: string, params: unknown[] = []): Promise<QueryResult<T>> {
       const { sqliteSql, sqliteParams } = prepareSqlite(sql, params);
-      const stmt = db.prepare(sqliteSql);
+      const stmt = getStmt(sqliteSql);
       const rows = stmt.all(...sqliteParams) as T[];
       return { rows, rowCount: rows.length };
     },
@@ -46,7 +56,7 @@ function createSqliteClient(dbPath: string): DbClient {
     },
     async execute(sql: string, params: unknown[] = []): Promise<{ rowCount: number }> {
       const { sqliteSql, sqliteParams } = prepareSqlite(sql, params);
-      const stmt = db.prepare(sqliteSql);
+      const stmt = getStmt(sqliteSql);
       const info = stmt.run(...sqliteParams);
       return { rowCount: info.changes };
     },

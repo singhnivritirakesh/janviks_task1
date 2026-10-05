@@ -87,12 +87,15 @@ npm run server:seed
 ```
 
 ### 3. Running in Development Mode
-To launch the full-stack development environment concurrently:
+To launch the full-stack development environment:
 ```bash
-# Start backend API (Port 5000) and frontend Vite dev server (Port 5173)
-npm run dev:all
+# Terminal 1: Start backend API server (Port 5000)
+npm run server:start
+
+# Terminal 2: Start frontend Vite dev server (Port 8080)
+npm run dev
 ```
-- **Frontend Application:** [http://localhost:5173](http://localhost:5173)
+- **Frontend Application:** [http://localhost:8080](http://localhost:8080)
 - **Hardened API:** [http://localhost:5000](http://localhost:5000)
 - **JWKS Endpoint:** [http://localhost:5000/.well-known/jwks.json](http://localhost:5000/.well-known/jwks.json)
 - **Health Probe:** [http://localhost:5000/api/health](http://localhost:5000/api/health)

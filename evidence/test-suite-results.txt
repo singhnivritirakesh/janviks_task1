@@ -1,0 +1,203 @@
+﻿
+> playsphere-connect@1.0.0 test:security
+> vitest run server/tests/security
+
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/SANDEEP/Downloads/PlaySphere-main[39m
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite
+[22m[39m≡ƒôª Using secure SQLite parameterized storage: C:\Users\SANDEEP\Downloads\PlaySphere-main\data\playsphere.sqlite
+≡ƒöä Executing database migrations...
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite
+[22m[39mΓ£à Database schema and indexes created successfully.
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 2: Low-privileged user (player) calling admin endpoint must receive 403 Forbidden and trigger security alert
+[22m[39m{"tag":"AUDIT_LOG","id":"fb3c4594-b8d6-4f34-ac23-13c3dfb827da","timestamp":"2026-10-05T10:50:10.454Z","event_type":"RBAC_FORBIDDEN_ROLE_ATTEMPT","severity":"WARNING","actor_id":"0a57ab91-973a-409b-ba76-8aaa532f3115","actor_role":"user","ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/admin/users","action":"GET","outcome":"BLOCKED","request_id":"a3e8d747-8880-44a7-a5f6-91cadc3c8b08","details":{"userRole":"user","requiredRoles":["admin"]},"prev_hash":"b20f781c78506a1fef4e139b5a7017e361358ef6b9bd4798fd07936ae2339a6f","hash":"4560813462cb9b1c96f40adb90d2349ff9017f793da474ac51635e8e11e289f5"}
+
+node.exe : [90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - 
+Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 2: Low-privileged user (player) calling admin endpoint 
+must receive 403 Forbidden and trigger security alert
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([90mstderr[2m... security alert:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[22m[39m{"tag":"SECURITY_ALERT","id":"52583303-e4d6-4995-8224-2cea591bec68","timestamp":"2026-10-05T10:50:10.455Z","a
+lert_type":"PRIVILEGE_ESCALATION_ATTEMPT","severity":"HIGH","description":"User '0a57ab91-973a-409b-ba76-8aaa532f3115' 
+with role 'user' attempted to access privileged administrator endpoint '/api/admin/users'.","source_ip":"127.0.0.1","us
+er_id":"0a57ab91-973a-409b-ba76-8aaa532f3115","metadata":{"role":"user","targetEndpoint":"/api/admin/users"},"status":"
+NEW","resolved_at":null}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 2: Low-privileged user (player) calling admin endpoint must receive 
+403 Forbidden and trigger security alert
+[22m[39m{"tag":"SECURITY_ALERT","id":"ea268c95-cfc1-4704-807b-342bffd99414","timestamp":"2026-10-05T10:50:10.459Z","a
+lert_type":"REPEATED_AUTHORIZATION_FAILURES","severity":"HIGH","description":"Observed 9 unauthorized or forbidden 
+requests from IP 127.0.0.1 (user: 0a57ab91-973a-409b-ba76-8aaa532f3115) in 5 minutes.","source_ip":"127.0.0.1","user_id
+":"0a57ab91-973a-409b-ba76-8aaa532f3115","metadata":{"unauthorizedCount":9,"windowMinutes":5},"status":"NEW","resolved_
+at":null}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate security alerts
+[22m[39m{"tag":"AUDIT_LOG","id":"467b2814-5768-49b7-afd2-ff746f12acc6","timestamp":"2026-10-05T10:50:11.399Z","event_type":"AUTH_LOGIN_FAILED","severity":"WARNING","actor_id":null,"actor_role":null,"ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/login","action":"POST","outcome":"FAILURE","request_id":"cd8af7d8-a0db-4bf2-bc74-9ceb0d6e141e","details":{"email":"lockout-test@playsphere.local"},"prev_hash":"4560813462cb9b1c96f40adb90d2349ff9017f793da474ac51635e8e11e289f5","hash":"11da5467f448f47c606bb636f30038a7b97bbc2dcc5937ddb9e4f352e0b3cccf"}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate 
+security alerts
+[22m[39m{"tag":"SECURITY_ALERT","id":"36a831a6-4fff-4ce7-a1cc-7377209990af","timestamp":"2026-10-05T10:50:11.401Z","a
+lert_type":"BRUTE_FORCE_ACCOUNT_TARGETED","severity":"HIGH","description":"Detected 6 consecutive failed login 
+attempts targeting account 'lockout-test@playsphere.local' within 10 minutes.","source_ip":"127.0.0.1","user_id":null,"
+metadata":{"email":"lockout-test@playsphere.local","failedAttempts":6,"windowMinutes":10},"status":"NEW","resolved_at":
+null}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate security alerts
+[22m[39m{"tag":"AUDIT_LOG","id":"527a8c4c-5fe0-4810-8a8d-63637ecaf069","timestamp":"2026-10-05T10:50:11.967Z","event_type":"AUTH_LOGIN_FAILED","severity":"WARNING","actor_id":null,"actor_role":null,"ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/login","action":"POST","outcome":"FAILURE","request_id":"8096e4a0-974c-447e-ac2b-bbf3eacda211","details":{"email":"lockout-test@playsphere.local"},"prev_hash":"11da5467f448f47c606bb636f30038a7b97bbc2dcc5937ddb9e4f352e0b3cccf","hash":"49240dde099d118f7bb08252962ef9ce9ae4f92713fd3bad15970830f69cd03d"}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate 
+security alerts
+[22m[39m{"tag":"SECURITY_ALERT","id":"a41841e1-9c13-4e20-bb63-d028fdffe125","timestamp":"2026-10-05T10:50:11.968Z","a
+lert_type":"BRUTE_FORCE_ACCOUNT_TARGETED","severity":"HIGH","description":"Detected 7 consecutive failed login 
+attempts targeting account 'lockout-test@playsphere.local' within 10 minutes.","source_ip":"127.0.0.1","user_id":null,"
+metadata":{"email":"lockout-test@playsphere.local","failedAttempts":7,"windowMinutes":10},"status":"NEW","resolved_at":
+null}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate security alerts
+[22m[39m{"tag":"AUDIT_LOG","id":"8364d099-6a2f-42ab-bbd3-f8646011b9bf","timestamp":"2026-10-05T10:50:12.390Z","event_type":"AUTH_LOGIN_FAILED","severity":"WARNING","actor_id":null,"actor_role":null,"ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/login","action":"POST","outcome":"FAILURE","request_id":"9ed81567-bdf2-44d1-8f02-05259a200df9","details":{"email":"lockout-test@playsphere.local"},"prev_hash":"49240dde099d118f7bb08252962ef9ce9ae4f92713fd3bad15970830f69cd03d","hash":"c881b7d5329ba0dd2bbc89de5d863ffa14d8a7da1d282d1e5ed9398435378596"}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate 
+security alerts
+[22m[39m{"tag":"SECURITY_ALERT","id":"0bd38eeb-8c2a-49b8-8db8-8a3a7d6e05c3","timestamp":"2026-10-05T10:50:12.390Z","a
+lert_type":"BRUTE_FORCE_ACCOUNT_TARGETED","severity":"HIGH","description":"Detected 8 consecutive failed login 
+attempts targeting account 'lockout-test@playsphere.local' within 10 minutes.","source_ip":"127.0.0.1","user_id":null,"
+metadata":{"email":"lockout-test@playsphere.local","failedAttempts":8,"windowMinutes":10},"status":"NEW","resolved_at":
+null}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate security alerts
+[22m[39m{"tag":"AUDIT_LOG","id":"62aecd5d-a533-451b-8b00-7ad7ddc3c147","timestamp":"2026-10-05T10:50:13.298Z","event_type":"AUTH_LOGIN_FAILED","severity":"WARNING","actor_id":null,"actor_role":null,"ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/login","action":"POST","outcome":"FAILURE","request_id":"356286bd-590f-426c-9353-3d79a4b36321","details":{"email":"lockout-test@playsphere.local"},"prev_hash":"c881b7d5329ba0dd2bbc89de5d863ffa14d8a7da1d282d1e5ed9398435378596","hash":"0324284d6aab41a292499686169c2e1c80a411e54050f1fcf7adf55529daa95a"}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate 
+security alerts
+[22m[39m{"tag":"SECURITY_ALERT","id":"f9cd2671-9927-4ddc-abbd-ab19f8c35794","timestamp":"2026-10-05T10:50:13.299Z","a
+lert_type":"BRUTE_FORCE_ACCOUNT_TARGETED","severity":"HIGH","description":"Detected 9 consecutive failed login 
+attempts targeting account 'lockout-test@playsphere.local' within 10 minutes.","source_ip":"127.0.0.1","user_id":null,"
+metadata":{"email":"lockout-test@playsphere.local","failedAttempts":9,"windowMinutes":10},"status":"NEW","resolved_at":
+null}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate security alerts
+[22m[39m{"tag":"AUDIT_LOG","id":"1cd11e46-0028-4f66-9b1a-6ec6a14eb5f7","timestamp":"2026-10-05T10:50:13.728Z","event_type":"AUTH_ACCOUNT_LOCKED","severity":"HIGH","actor_id":"bcdba567-ee26-4aad-91be-66b097d41d72","actor_role":"user","ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/login","action":"POST","outcome":"BLOCKED","request_id":"391853f9-e756-4b21-9a2d-2d2ee1791acf","details":{"email":"lockout-test@playsphere.local","attempts":5,"lockoutDuration":15},"prev_hash":"0324284d6aab41a292499686169c2e1c80a411e54050f1fcf7adf55529daa95a","hash":"fabf073237ba3f2117946005252cb0efbdb58abc5d9aa957471f3f91cd68afad"}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate security alerts
+[22m[39m{"tag":"AUDIT_LOG","id":"cbe68249-8b62-4e1b-8864-52dd094aa60e","timestamp":"2026-10-05T10:50:13.728Z","event_type":"AUTH_LOGIN_FAILED","severity":"WARNING","actor_id":null,"actor_role":null,"ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/login","action":"POST","outcome":"FAILURE","request_id":"391853f9-e756-4b21-9a2d-2d2ee1791acf","details":{"email":"lockout-test@playsphere.local"},"prev_hash":"fabf073237ba3f2117946005252cb0efbdb58abc5d9aa957471f3f91cd68afad","hash":"c3c3fd65206fccd35f77557507992a3bdb830edfc8ae108ff6ab28db9130339c"}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate 
+security alerts
+[22m[39m{"tag":"SECURITY_ALERT","id":"31a0f745-3dc6-4f68-a129-9035398a9448","timestamp":"2026-10-05T10:50:13.730Z","a
+lert_type":"BRUTE_FORCE_ACCOUNT_TARGETED","severity":"HIGH","description":"Detected 10 consecutive failed login 
+attempts targeting account 'lockout-test@playsphere.local' within 10 minutes.","source_ip":"127.0.0.1","user_id":null,"
+metadata":{"email":"lockout-test@playsphere.local","failedAttempts":10,"windowMinutes":10},"status":"NEW","resolved_at"
+:null}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate 
+security alerts
+[22m[39m{"tag":"SECURITY_ALERT","id":"5c0fed61-172f-4bca-ad05-3ac22a9033af","timestamp":"2026-10-05T10:50:13.730Z","a
+lert_type":"CREDENTIAL_STUFFING_IP_BURST","severity":"CRITICAL","description":"Detected 10 failed login attempts 
+originating from IP '127.0.0.1' across multiple accounts.","source_ip":"127.0.0.1","user_id":null,"metadata":{"source_i
+p":"127.0.0.1","failedAttempts":10,"windowMinutes":10},"status":"NEW","resolved_at":null}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 3: Repeated failed login attempts must lock the account and generate security alerts
+[22m[39m{"tag":"AUDIT_LOG","id":"06a09467-794c-44a7-849c-a192fd79f1e8","timestamp":"2026-10-05T10:50:13.736Z","event_type":"AUTH_LOCKED_ACCOUNT_ATTEMPT","severity":"WARNING","actor_id":"bcdba567-ee26-4aad-91be-66b097d41d72","actor_role":"user","ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/login","action":"POST","outcome":"BLOCKED","request_id":"36a1ee3d-6191-4399-b1e9-374be0092a25","details":{"email":"lockout-test@playsphere.local","lockoutExpiry":"2026-10-05T11:05:13.727Z"},"prev_hash":"c3c3fd65206fccd35f77557507992a3bdb830edfc8ae108ff6ab28db9130339c","hash":"9a008021e5386d3c4dbb85668e1016a1539bfeac3aac9f2220593b68d5b5552c"}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 4: Stored XSS payloads must be neutralized and stripped of all executable tags
+[22m[39m{"tag":"AUDIT_LOG","id":"d5168431-5126-457b-a973-134a504def49","timestamp":"2026-10-05T10:50:13.749Z","event_type":"EVENT_CREATED","severity":"INFO","actor_id":"25b8b532-b03b-4c93-adb5-554181b7dec4","actor_role":"admin","ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/events/b321cc09-e36f-4c48-b911-13dce90f9066","action":"POST","outcome":"SUCCESS","request_id":"fef729bb-c2f0-4b1a-b1f9-26efa148f50b","details":{"eventId":"b321cc09-e36f-4c48-b911-13dce90f9066","title":"Soccer Match"},"prev_hash":"9a008021e5386d3c4dbb85668e1016a1539bfeac3aac9f2220593b68d5b5552c","hash":"4a46911d928e27527b9de092a428ee6652330fd1bc075798e6b7e69b1a6f8188"}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 5: Tokens with alg=none, HS256 confusion, expired tokens, and reused refresh tokens must be rejected
+[22m[39m{"tag":"AUDIT_LOG","id":"92e533d7-7483-4df9-af20-622d3a5e0a46","timestamp":"2026-10-05T10:50:13.764Z","event_type":"AUTH_INVALID_TOKEN","severity":"WARNING","actor_id":null,"actor_role":null,"ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/admin/users","action":"GET","outcome":"BLOCKED","request_id":"e31cb567-992f-4884-83cf-f0eb291629c9","details":{"error":"Invalid token algorithm. Only RS256 is permitted."},"prev_hash":"4a46911d928e27527b9de092a428ee6652330fd1bc075798e6b7e69b1a6f8188","hash":"7cf861e1fbcdc43eed3e282d1072d28e07b50cc6607fe512373566cb09090362"}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 5: Tokens with alg=none, HS256 confusion, expired tokens, and reused 
+refresh tokens must be rejected
+[22m[39m{"tag":"SECURITY_ALERT","id":"82009c44-bf60-40ea-a5a1-c0fcb9ef3152","timestamp":"2026-10-05T10:50:13.765Z","a
+lert_type":"REPEATED_AUTHORIZATION_FAILURES","severity":"HIGH","description":"Observed 12 unauthorized or forbidden 
+requests from IP 127.0.0.1 (user: anonymous) in 5 minutes.","source_ip":"127.0.0.1","user_id":null,"metadata":{"unautho
+rizedCount":12,"windowMinutes":5},"status":"NEW","resolved_at":null}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 5: Tokens with alg=none, HS256 confusion, expired tokens, and reused refresh tokens must be rejected
+[22m[39m{"tag":"AUDIT_LOG","id":"b69be726-821e-4ccd-9f4c-b4971db8aa8b","timestamp":"2026-10-05T10:50:13.776Z","event_type":"AUTH_INVALID_TOKEN","severity":"WARNING","actor_id":null,"actor_role":null,"ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/admin/users","action":"GET","outcome":"BLOCKED","request_id":"512a25ff-3196-482c-a95e-e2f5fd04a9ce","details":{"error":"Invalid token algorithm. Only RS256 is permitted."},"prev_hash":"7cf861e1fbcdc43eed3e282d1072d28e07b50cc6607fe512373566cb09090362","hash":"94b663ffa2ffdcfd2f86a5d86d2a0f2f4b4b64a7211fe54606e2f91e67427c4f"}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 5: Tokens with alg=none, HS256 confusion, expired tokens, and reused 
+refresh tokens must be rejected
+[22m[39m{"tag":"SECURITY_ALERT","id":"e36ac0b5-b451-4733-8c61-a4dc16315688","timestamp":"2026-10-05T10:50:13.777Z","a
+lert_type":"REPEATED_AUTHORIZATION_FAILURES","severity":"HIGH","description":"Observed 13 unauthorized or forbidden 
+requests from IP 127.0.0.1 (user: anonymous) in 5 minutes.","source_ip":"127.0.0.1","user_id":null,"metadata":{"unautho
+rizedCount":13,"windowMinutes":5},"status":"NEW","resolved_at":null}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 5: Tokens with alg=none, HS256 confusion, expired tokens, and reused refresh tokens must be rejected
+[22m[39m{"tag":"AUDIT_LOG","id":"25526d63-c7d8-4172-b902-07304e67ae2e","timestamp":"2026-10-05T10:50:14.228Z","event_type":"AUTH_LOGIN_SUCCESS","severity":"INFO","actor_id":"0a57ab91-973a-409b-ba76-8aaa532f3115","actor_role":"user","ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/login","action":"POST","outcome":"SUCCESS","request_id":"c54bd44e-c373-4814-93a9-bf6dbb61c01d","details":{"email":"user-a@playsphere.local","role":"user"},"prev_hash":"94b663ffa2ffdcfd2f86a5d86d2a0f2f4b4b64a7211fe54606e2f91e67427c4f","hash":"eef2bfa581d05573426bfc39a9615fbb1927f450ce4f43201af9a46a70ff9ff1"}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 5: Tokens with alg=none, HS256 confusion, expired tokens, and reused refresh tokens must be rejected
+[22m[39m{"tag":"AUDIT_LOG","id":"bc084dfc-4d6d-46b5-ac5f-d4c5504c0971","timestamp":"2026-10-05T10:50:14.249Z","event_type":"REFRESH_TOKEN_REUSE_ATTEMPT","severity":"CRITICAL","actor_id":"0a57ab91-973a-409b-ba76-8aaa532f3115","actor_role":null,"ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/refresh","action":"POST","outcome":"BLOCKED","request_id":"9f089a75-901a-400f-b154-b5b0549981fb","details":{"family_id":"ba8a131c-2b87-4f61-8d41-362388f9c572"},"prev_hash":"eef2bfa581d05573426bfc39a9615fbb1927f450ce4f43201af9a46a70ff9ff1","hash":"d5818185f8221390f8ce71d0d096de197c0de963d9517019c3d9d4dc92c0fba9"}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 5: Tokens with alg=none, HS256 confusion, expired tokens, and reused 
+refresh tokens must be rejected
+[22m[39m{"tag":"SECURITY_ALERT","id":"4311a871-a64f-4702-aff0-6a493511505f","timestamp":"2026-10-05T10:50:14.249Z","a
+lert_type":"REFRESH_TOKEN_REUSE_DETECTED","severity":"CRITICAL","description":"A previously revoked refresh token in 
+family 'ba8a131c-2b87-4f61-8d41-362388f9c572' was presented for exchange. Token family invalidated immediately. 
+Potential session hijacking.","source_ip":"127.0.0.1","user_id":"0a57ab91-973a-409b-ba76-8aaa532f3115","metadata":{"fam
+ilyId":"ba8a131c-2b87-4f61-8d41-362388f9c572","securityAction":"REVOKE_ALL_FAMILY_TOKENS"},"status":"NEW","resolved_at"
+:null}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 5: Tokens with alg=none, HS256 confusion, expired tokens, and reused refresh tokens must be rejected
+[22m[39m{"tag":"AUDIT_LOG","id":"d79a9bbc-fb8e-4ca3-96a4-5b96a0c848e3","timestamp":"2026-10-05T10:50:14.256Z","event_type":"REFRESH_TOKEN_REUSE_ATTEMPT","severity":"CRITICAL","actor_id":"0a57ab91-973a-409b-ba76-8aaa532f3115","actor_role":null,"ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/refresh","action":"POST","outcome":"BLOCKED","request_id":"554b398b-055d-4bd6-879c-287fb0112896","details":{"family_id":"ba8a131c-2b87-4f61-8d41-362388f9c572"},"prev_hash":"d5818185f8221390f8ce71d0d096de197c0de963d9517019c3d9d4dc92c0fba9","hash":"16194eafbdda96d618ce1a94afb18cff1ccb3783de17234eaebf1d018a32dd8d"}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 5: Tokens with alg=none, HS256 confusion, expired tokens, and reused 
+refresh tokens must be rejected
+[22m[39m{"tag":"SECURITY_ALERT","id":"716dca1a-8239-4e1d-a041-9cf83423009e","timestamp":"2026-10-05T10:50:14.258Z","a
+lert_type":"REFRESH_TOKEN_REUSE_DETECTED","severity":"CRITICAL","description":"A previously revoked refresh token in 
+family 'ba8a131c-2b87-4f61-8d41-362388f9c572' was presented for exchange. Token family invalidated immediately. 
+Potential session hijacking.","source_ip":"127.0.0.1","user_id":"0a57ab91-973a-409b-ba76-8aaa532f3115","metadata":{"fam
+ilyId":"ba8a131c-2b87-4f61-8d41-362388f9c572","securityAction":"REVOKE_ALL_FAMILY_TOKENS"},"status":"NEW","resolved_at"
+:null}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 6: Administrator login must require TOTP challenge step; valid code grants session tokens
+[22m[39m{"tag":"AUDIT_LOG","id":"614a590c-3563-4a1f-97f6-db3d558ba2ec","timestamp":"2026-10-05T10:50:14.825Z","event_type":"AUTH_MFA_CHALLENGE_ISSUED","severity":"INFO","actor_id":"25b8b532-b03b-4c93-adb5-554181b7dec4","actor_role":"admin","ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/login","action":"POST","outcome":"SUCCESS","request_id":"e2b7da81-1ee1-4f74-b90d-a6933a711f61","details":{"email":"admin-sec@playsphere.local"},"prev_hash":"16194eafbdda96d618ce1a94afb18cff1ccb3783de17234eaebf1d018a32dd8d","hash":"b38df8aa32af6a53f8bbf56a679014d6c690c019efb5fe53aec8e824cac9b172"}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 6: Administrator login must require TOTP challenge step; valid code grants session tokens
+[22m[39m{"tag":"AUDIT_LOG","id":"bcf6b6d7-8c69-43de-9de9-1b8d197e2991","timestamp":"2026-10-05T10:50:14.835Z","event_type":"AUTH_MFA_FAILED","severity":"WARNING","actor_id":"25b8b532-b03b-4c93-adb5-554181b7dec4","actor_role":"admin","ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/mfa/challenge","action":"POST","outcome":"FAILURE","request_id":"135f5938-8932-4ade-ae00-315169768e55","details":{"email":"admin-sec@playsphere.local"},"prev_hash":"b38df8aa32af6a53f8bbf56a679014d6c690c019efb5fe53aec8e824cac9b172","hash":"b3ab14916d9673cccbed491d1a6ccf2faeb5469be500dff7de96ae7e1cf71fa3"}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 6: Administrator login must require TOTP challenge step; valid code grants session tokens
+[22m[39m{"tag":"AUDIT_LOG","id":"dbb158f2-f0ab-4e84-972a-39d8483228bb","timestamp":"2026-10-05T10:50:14.842Z","event_type":"AUTH_MFA_SUCCESS","severity":"INFO","actor_id":"25b8b532-b03b-4c93-adb5-554181b7dec4","actor_role":"admin","ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/mfa/challenge","action":"POST","outcome":"SUCCESS","request_id":"1a743a4d-9243-4882-a98d-c338c75cbec6","details":{"email":"admin-sec@playsphere.local"},"prev_hash":"b3ab14916d9673cccbed491d1a6ccf2faeb5469be500dff7de96ae7e1cf71fa3","hash":"5df94cb3a305c5b9ff93582febe6f5e9524e98572db37731611f3384983d6041"}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 6: Administrator login must require TOTP challenge step; valid code grants session tokens
+[22m[39m{"tag":"AUDIT_LOG","id":"9e99dfc7-8407-4681-b593-8ac06e3fd0a1","timestamp":"2026-10-05T10:50:14.846Z","event_type":"AUTH_LOGIN_SUCCESS","severity":"INFO","actor_id":"25b8b532-b03b-4c93-adb5-554181b7dec4","actor_role":"admin","ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/auth/login","action":"POST","outcome":"SUCCESS","request_id":"1a743a4d-9243-4882-a98d-c338c75cbec6","details":{"email":"admin-sec@playsphere.local","role":"admin"},"prev_hash":"5df94cb3a305c5b9ff93582febe6f5e9524e98572db37731611f3384983d6041","hash":"6decdf8fab7d9b88bdf75410730a698085efac4d949d50e698f0f702ed164564"}
+
+[90mstdout[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22m[2mTEST 7: User A attempting to view or cancel User B booking must receive 403 Forbidden
+[22m[39m{"tag":"AUDIT_LOG","id":"ba8b6c05-73ac-42c1-93a2-a55634bba00f","timestamp":"2026-10-05T10:50:14.852Z","event_type":"IDOR_ACCESS_ATTEMPT_BLOCKED","severity":"WARNING","actor_id":"0a57ab91-973a-409b-ba76-8aaa532f3115","actor_role":"user","ip_address":"127.0.0.1","user_agent":"unknown","resource":"/api/bookings/b612c904-f89d-4e35-bb7f-cba063a20530","action":"GET","outcome":"BLOCKED","request_id":"53f26a88-6dc5-4616-ab4f-e9971d3011ec","details":{"bookingId":"b612c904-f89d-4e35-bb7f-cba063a20530","resourceOwnerId":"f1c72ca7-a740-4dc1-9759-566962cee18b","attemptedByUserId":"0a57ab91-973a-409b-ba76-8aaa532f3115"},"prev_hash":"6decdf8fab7d9b88bdf75410730a698085efac4d949d50e698f0f702ed164564","hash":"855e3ef82e5c2d1554eba6534e3cacfbee71861c0a20ff4efe73adb05cdea4a2"}
+
+[90mstderr[2m | server/tests/security/security.test.ts[2m > [22m[2m≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive 
+Security Controls Test Suite[2m > [22m[2mTEST 7: User A attempting to view or cancel User B booking must receive 
+403 Forbidden
+[22m[39m{"tag":"SECURITY_ALERT","id":"2c43cc6f-c699-42db-85d9-1752276376fc","timestamp":"2026-10-05T10:50:14.853Z","a
+lert_type":"REPEATED_AUTHORIZATION_FAILURES","severity":"HIGH","description":"Observed 16 unauthorized or forbidden 
+requests from IP 127.0.0.1 (user: 0a57ab91-973a-409b-ba76-8aaa532f3115) in 5 minutes.","source_ip":"127.0.0.1","user_id
+":"0a57ab91-973a-409b-ba76-8aaa532f3115","metadata":{"unauthorizedCount":16,"windowMinutes":5},"status":"NEW","resolved
+_at":null}
+
+ [32mΓ£ô[39m server/tests/security/security.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 6307[2mms[22m[39m
+   [33m[2mΓ£ô[22m[39m ≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22mTEST 3: Repeated failed login attempts must lock the account and generate security alerts [33m 3276[2mms[22m[39m
+   [33m[2mΓ£ô[22m[39m ≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22mTEST 5: Tokens with alg=none, HS256 confusion, expired tokens, and reused refresh tokens must be rejected [33m 501[2mms[22m[39m
+   [33m[2mΓ£ô[22m[39m ≡ƒ¢í∩╕Å PlaySphere Connect - Comprehensive Security Controls Test Suite[2m > [22mTEST 6: Administrator login must require TOTP challenge step; valid code grants session tokens [33m 588[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+[2m   Start at [22m 16:20:05
+[2m   Duration [22m 9.76s[2m (transform 481ms, setup 292ms, collect 1.26s, tests 6.31s, environment 0ms, prepare 182ms)[22m
+
